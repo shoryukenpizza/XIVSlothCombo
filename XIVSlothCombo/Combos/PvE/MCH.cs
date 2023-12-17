@@ -103,6 +103,29 @@ namespace XIVSlothCombo.Combos.PvE
                 Dismantle = 62;
         }
 
+        internal class MCH_ST_BasicCombo : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_ST_BasicCombo;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                if (actionID is HeatedSplitShot)
+                {
+                    //1-2-3 Combo
+                    if (comboTime > 0)
+                    {
+                        if (lastComboMove is SplitShot && LevelChecked(OriginalHook(SlugShot)))
+                            return OriginalHook(SlugShot);
+
+                        if (lastComboMove is SlugShot && LevelChecked(OriginalHook(CleanShot)))
+                            return OriginalHook(CleanShot);
+                    }
+                    return OriginalHook(SplitShot);
+                }
+                return actionID;
+            }
+        }
+
         internal class MCH_ST_SimpleMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_ST_SimpleMode;
@@ -259,10 +282,11 @@ namespace XIVSlothCombo.Combos.PvE
                     //gauss and ricochet overcap protection
                     if (CanWeave(actionID) && !gauge.IsOverheated && !HasEffect(Buffs.Wildfire))
                     {
-                        if (ActionReady(GaussRound) && GetRemainingCharges(GaussRound) >= GetMaxCharges(GaussRound))
+                        if (HasCharges(GaussRound) && (!LevelChecked(Ricochet) ||
+                            GetCooldownRemainingTime(GaussRound) < GetCooldownRemainingTime(Ricochet)))
                             return GaussRound;
 
-                        if (ActionReady(Ricochet) && GetRemainingCharges(Ricochet) >= GetMaxCharges(Ricochet))
+                        else if (ActionReady(Ricochet))
                             return Ricochet;
                     }
 
