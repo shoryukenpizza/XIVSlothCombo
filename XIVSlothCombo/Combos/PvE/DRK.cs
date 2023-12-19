@@ -78,19 +78,19 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is TheBlackestNight)
                 {
-                    if (ActionReady(TheBlackestNight))
+                    if (ActionReady(TheBlackestNight) || GetCooldownRemainingTime(TheBlackestNight) < 1)
                         return TheBlackestNight;
 
                     else if ((IsOnCooldown(TheBlackestNight) || level < 70) && (GetCooldownRemainingTime(Rampart) < 1 || ActionReady(Rampart)))
                         return Rampart;
 
-                    else if (IsOnCooldown(Rampart) && (GetRemainingCharges(Oblation) > 1) && LevelChecked(Oblation))
+                    else if (IsOnCooldown(Rampart) && (GetRemainingCharges(Oblation) > 1) && level >= 82)
                         return Oblation;
 
                     else if (GetRemainingCharges(Oblation) == 1 && (GetCooldownRemainingTime(ShadowWall) < 1 || ActionReady(ShadowWall)))
                         return ShadowWall;
 
-                    else if (IsOnCooldown(ShadowWall) && (GetRemainingCharges(Oblation) == 1 && !HasEffect(Buffs.Oblation) && LevelChecked(Oblation)))
+                    else if (GetRemainingCharges(Oblation) == 1 && !HasEffect(Buffs.Oblation) && LevelChecked(Oblation))
                         return Oblation;
                 }
                 return actionID;

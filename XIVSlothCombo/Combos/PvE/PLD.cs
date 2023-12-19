@@ -102,13 +102,16 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is (Sheltron or HolySheltron))
                 {
-                    if (ActionReady(Sheltron) && Gauge.OathGauge >= 65 && IsOffCooldown(Sheltron))
+                    if (ActionReady(OriginalHook(Sheltron)) && Gauge.OathGauge >= 50 && IsOffCooldown(Sheltron) && (!HasEffect(Buffs.Sheltron) || !HasEffect(Buffs.HolySheltron)))
                         return OriginalHook(Sheltron);
 
-                    else if ((Gauge.OathGauge < 65 || ActionReady(Sheltron)) && (GetCooldownRemainingTime(Rampart) < 1 || ActionReady(Rampart)))
+                    else if ((Gauge.OathGauge < 50 || 
+                        (HasEffect(Buffs.Sheltron) || 
+                        (HasEffect(Buffs.HolySheltron)))) && 
+                        (GetCooldownRemainingTime(Rampart) < 1 || ActionReady(Rampart)))
                         return Rampart;
 
-                    else if (IsOnCooldown(Rampart) && (ActionReady(Bulwark) || (GetCooldownRemainingTime(Bulwark) < 1)))
+                    else if (IsOnCooldown(Rampart) && level >= 52 && (ActionReady(Bulwark) || (GetCooldownRemainingTime(Bulwark) < 1)))
                         return Bulwark;
 
                     else if ((IsOnCooldown(Bulwark) || level < 52) && (GetCooldownRemainingTime(DivineVeil) < 1 || ActionReady(DivineVeil)))
