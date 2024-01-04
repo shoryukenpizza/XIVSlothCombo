@@ -87,7 +87,7 @@ namespace XIVSlothCombo.Combos.PvE
                     else if (IsOnCooldown(Rampart) && (GetRemainingCharges(Oblation) > 1) && level >= 82)
                         return Oblation;
 
-                    else if (GetRemainingCharges(Oblation) == 1 && (GetCooldownRemainingTime(ShadowWall) < 1 || ActionReady(ShadowWall)))
+                    else if ((GetRemainingCharges(Oblation) == 1 || level < 82) && (GetCooldownRemainingTime(ShadowWall) < 1 || ActionReady(ShadowWall)))
                         return ShadowWall;
 
                     else if (GetRemainingCharges(Oblation) == 1 && !HasEffect(Buffs.Oblation) && LevelChecked(Oblation))
