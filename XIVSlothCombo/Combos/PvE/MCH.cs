@@ -142,7 +142,7 @@ namespace XIVSlothCombo.Combos.PvE
                 MCHGauge? gauge = GetJobGauge<MCHGauge>();
                 bool interruptReady = ActionReady(All.HeadGraze) && CanInterruptEnemy();
 
-                if (actionID is SplitShot or HeatedSplitShot)
+                if (actionID is SplitShot)
                 {
                     if (IsEnabled(CustomComboPreset.MCH_Variant_Cure) &&
                     IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= Config.MCH_VariantCure)
@@ -320,23 +320,20 @@ namespace XIVSlothCombo.Combos.PvE
 
 
             private bool UseHyperchargeStandard(MCHGauge gauge)
-
             {
-                if (CombatEngageDuration().Minutes == 0 && (gauge.Heat == 60 || CombatEngageDuration().Seconds <= 33))
+                // i really do not remember why i put > 70 here for heat, and im afraid if i remove it itll break it lol
+                if (CombatEngageDuration().Minutes == 0 &&
+                    (gauge.Heat > 70 || CombatEngageDuration().Seconds <= 30) && !WasLastWeaponskill(OriginalHook(CleanShot)))
                     return true;
 
                 if (CombatEngageDuration().Minutes > 0)
                 {
-                    if (gauge.Heat >= 55 && wildfireCDTime > 25)
+                    if (CombatEngageDuration().Minutes % 2 == 1 && gauge.Heat >= 90)
                         return true;
 
-                    if (gauge.Heat >= 50 && wildfireCDTime <= 25 && wildfireCDTime >= 1)
-                        return false;
-
-                    if (gauge.Heat >= 55)
+                    if (CombatEngageDuration().Minutes % 2 == 0)
                         return true;
                 }
-
                 return false;
             }
         }
@@ -730,7 +727,7 @@ namespace XIVSlothCombo.Combos.PvE
                         if (lastComboMove is SplitShot && LevelChecked(OriginalHook(SlugShot)))
                             return OriginalHook(SlugShot);
 
-                        if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassembled) && Config.MCH_ST_Reassembled[3] &&
+                        if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[3] &&
                             !LevelChecked(Drill) && !HasEffect(Buffs.Reassembled) && HasCharges(Reassemble) && lastComboMove is SlugShot)
                             return Reassemble;
 
@@ -1080,9 +1077,9 @@ namespace XIVSlothCombo.Combos.PvE
                     if (ActionReady(GaussRound) && GetRemainingCharges(GaussRound) >= GetRemainingCharges(Ricochet))
                         return GaussRound;
 
-                    if (gaussCharges >= ricochetCharges)
+                    if (GetRemainingCharges(GaussRound) >= GetRemainingCharges(Ricochet))
                         return GaussRound;
-                    else if (ricochetCharges > 0)
+                    else if (GetRemainingCharges(Ricochet) > 0)
                         return Ricochet;
                 }
 
@@ -1166,14 +1163,14 @@ namespace XIVSlothCombo.Combos.PvE
                         return Hypercharge;
 
 
-                    if (heatBlastCD.CooldownRemaining < 0.7 && LevelChecked(AutoCrossbow)) // prioritize autocrossbow
+                    if (GetCooldownRemaining(HeatBlast) < 0.7 && LevelChecked(AutoCrossbow)) // prioritize autocrossbow
                         return AutoCrossbow;
 
                     if (IsEnabled(CustomComboPreset.MCH_AutoCrossbow_GaussRound) && gauge.IsOverheated)
                     {
                         if (!LevelChecked(Ricochet))
                             return GaussRound;
-                        if (gaussCD.CooldownRemaining < ricochetCD.CooldownRemaining)
+                        if (GetCooldownRemaining(GaussRound) < GetCooldownRemaining(Ricochet))
                             return GaussRound;
                         else
                             return Ricochet;
