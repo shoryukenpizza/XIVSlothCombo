@@ -40,7 +40,13 @@ namespace XIVSlothCombo.Combos.PvE
             FightOrFlight = 20,
             Atonement = 16460,
             Intervene = 16461,
-            Sheltron = 3542;
+            Sheltron = 3542,
+            Rampart = 7531,
+            Sentinel = 17,
+            Bulwark = 22,
+            DivineVeil = 3540,
+            HolySheltron = 3542,
+            Clemancy = 3541;
 
         public static class Buffs
         {
@@ -61,6 +67,17 @@ namespace XIVSlothCombo.Combos.PvE
                 GoringBlade = 725;
         }
 
+        public static class Levels
+        {
+            internal const byte
+                Sheltron = 35,
+                Sentinel = 38,
+                Bulwark = 52,
+                DivineVeil = 56,
+                Rampart = 8,
+                Clemancy = 58;
+        }
+
         private static PLDGauge Gauge => CustomComboFunctions.GetJobGauge<PLDGauge>();
 
         public static class Config
@@ -77,6 +94,38 @@ namespace XIVSlothCombo.Combos.PvE
                 PLD_ST_DivineMightTiming = new("PLD_ST_DivineMightTiming");
             public static UserBool
                 PLD_Intervene_MeleeOnly = new("PLD_Intervene_MeleeOnly");
+        }
+
+        internal class PLD_SimpleMit : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PLD_SimpleMit;
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                if (actionID is (Sheltron or HolySheltron))
+                {
+                    if (ActionReady(OriginalHook(Sheltron)) && Gauge.OathGauge >= 50 && IsOffCooldown(Sheltron) && (!HasEffect(Buffs.Sheltron) || !HasEffect(Buffs.HolySheltron)))
+                        return OriginalHook(Sheltron);
+
+                    else if ((Gauge.OathGauge < 50 || 
+                        (HasEffect(Buffs.Sheltron) || 
+                        (HasEffect(Buffs.HolySheltron)))) && 
+                        (GetCooldownRemainingTime(Rampart) < 1 || ActionReady(Rampart)))
+                        return Rampart;
+
+                    else if (IsOnCooldown(Rampart) && level >= 52 && (ActionReady(Bulwark) || (GetCooldownRemainingTime(Bulwark) < 1)))
+                        return Bulwark;
+
+                    else if ((IsOnCooldown(Bulwark) || level < 52) && (GetCooldownRemainingTime(DivineVeil) < 1 || ActionReady(DivineVeil)))
+                        return DivineVeil;
+
+                    else if (IsOnCooldown(DivineVeil) && (GetCooldownRemainingTime(Sentinel) < 1 || ActionReady(Sentinel)))
+                        return Sentinel;
+
+                    else if ((IsOnCooldown(Sentinel) || level < 38) && ActionReady(Clemancy))
+                        return Clemancy;
+                }
+                return actionID;
+            }
         }
 
         internal class PLD_ST_SimpleMode : CustomCombo

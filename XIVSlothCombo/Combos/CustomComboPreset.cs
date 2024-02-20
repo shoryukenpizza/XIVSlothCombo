@@ -1031,6 +1031,9 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Cooldowns on Main Combo", "Collection of cooldowns to add to the main combo", DRK.JobID)]
         DRK_MainComboCDs_Group = 5099,
 
+        [ReplaceSkill(DRK.TheBlackestNight)]
+        [CustomComboInfo("Simple Mitigation", "Replace TBN with single-target mits.", DRK.JobID, -1, "", "")]
+        DRK_SimpleMit = 5034,
         [ReplaceSkill(DRK.Souleater)]
         [CustomComboInfo("Souleater Combo", "Replace Souleater with its combo chain. \nIf all sub options are selected will turn into a full one button rotation (Advanced Dark Knight)", DRK.JobID)]
         DRK_SouleaterCombo = 5000,
@@ -1375,6 +1378,9 @@ namespace XIVSlothCombo.Combos
 
         #region GUNBREAKER
 
+        [ReplaceSkill(GNB.HeartofStone)]
+        [CustomComboInfo("Simple Mitigation Feature", "Replace Heart of Stone/Corundum with other mitigation tools to mitigate with 1 button optimally", GNB.JobID, 0, "", "")]
+        GNB_SimpleMit = 7601,
         [CustomComboInfo("Skill Speed Support Feature", "Allows for features to support various skill speed rotations.", GNB.JobID, 0)]
         GNB_ST_SkSSupport = 7000,
 
@@ -1552,6 +1558,10 @@ namespace XIVSlothCombo.Combos
         #endregion
 
         #region MACHINIST
+
+        [ReplaceSkill(MCH.HeatedSplitShot)]
+        [CustomComboInfo("Basic Combo Feature", "Replaces Heated Splitshot with the basic combo.", MCH.JobID, -99, "", "")]
+        MCH_ST_BasicCombo = 8059,
 
         #region Simple ST
 
@@ -2182,6 +2192,10 @@ namespace XIVSlothCombo.Combos
         #region PALADIN
 
         //// Last value = 11032
+
+        [ReplaceSkill(PLD.Sheltron)]
+        [CustomComboInfo("Simple Mitigation Mode", $"Replaces Sheltron with a one-button mitigation rotation.", PLD.JobID, -99)]
+        PLD_SimpleMit = 11999,
 
         [ConflictingCombos(PLD_ST_AdvancedMode)]
         [ReplaceSkill(PLD.FastBlade)]
