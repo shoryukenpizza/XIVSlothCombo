@@ -8,7 +8,7 @@ using XIVSlothCombo.Data;
 using XIVSlothCombo.Extensions;
 
 
-namespace XIVSlothCombo.Combos.PvE
+namespace XIVSlothCombo.Combos.Pv
 {
     internal class MCH
     {
@@ -1163,14 +1163,14 @@ namespace XIVSlothCombo.Combos.PvE
                         return Hypercharge;
 
 
-                    if (GetCooldownRemaining(HeatBlast) < 0.7 && LevelChecked(AutoCrossbow)) // prioritize autocrossbow
+                    if (GetCooldownRemainingTime(HeatBlast) < 0.7 && LevelChecked(AutoCrossbow)) // prioritize autocrossbow
                         return AutoCrossbow;
 
                     if (IsEnabled(CustomComboPreset.MCH_AutoCrossbow_GaussRound) && gauge.IsOverheated)
                     {
                         if (!LevelChecked(Ricochet))
                             return GaussRound;
-                        if (GetCooldownRemaining(GaussRound) < GetCooldownRemaining(Ricochet))
+                        if (GetCooldownRemainingTime(GaussRound) < GetCooldownRemainingTime(Ricochet))
                             return GaussRound;
                         else
                             return Ricochet;
