@@ -8,7 +8,7 @@ using XIVSlothCombo.Data;
 using XIVSlothCombo.Extensions;
 
 
-namespace XIVSlothCombo.Combos.Pv
+namespace XIVSlothCombo.Combos.PvE
 {
     internal class MCH
     {
