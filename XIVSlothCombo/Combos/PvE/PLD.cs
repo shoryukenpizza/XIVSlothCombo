@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
+using ECommons.DalamudServices;
 using System.Linq;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.CustomComboNS;
@@ -144,7 +145,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (HasBattleTarget())
                     {
                         if (!InMeleeRange() && HolySpirit.LevelChecked() &&
-                            GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && !IsMoving)
+                            GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && (!IsMoving || HasEffect(Buffs.DivineMight)))
                             return HolySpirit;
 
                         if (!InMeleeRange() && ShieldLob.LevelChecked())
@@ -166,7 +167,7 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         // Requiescat inside burst (checking for FoF buff causes a late weave and can misalign over long fights with some ping)
-                        if (CanWeave(actionID) && WasLastAbility(FightOrFlight) && ActionReady(Requiescat))
+                        if (CanWeave(actionID) && (WasLastAbility(FightOrFlight) || JustUsed(FightOrFlight, 6f)) && ActionReady(Requiescat))
                             return Requiescat;
 
                         // Actions under FoF burst
@@ -272,7 +273,7 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
                     // Requiescat inside burst (checking for FoF buff causes a late weave and can misalign over long fights with some ping)
-                    if (CanWeave(actionID) && WasLastAbility(FightOrFlight) && ActionReady(Requiescat))
+                    if (CanWeave(actionID) && (WasLastAbility(FightOrFlight) || JustUsed(FightOrFlight, 6f)) && ActionReady(Requiescat))
                         return Requiescat;
 
                     // Actions under FoF burst
@@ -355,7 +356,7 @@ namespace XIVSlothCombo.Combos.PvE
                         {
                             // HS when out of range
                             if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit) &&
-                                !IsMoving &&
+                                (!IsMoving || HasEffect(Buffs.DivineMight)) &&
                                 HolySpirit.LevelChecked() &&
                                 GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp)
                                 return HolySpirit;
@@ -393,7 +394,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                         // Requiescat inside burst (checking for FoF buff causes a late weave and can misalign over long fights with some ping)
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Requiescat) &&
-                            WasLastAbility(FightOrFlight) && ActionReady(Requiescat))
+                            (WasLastAbility(FightOrFlight) || JustUsed(FightOrFlight, 6f)) && ActionReady(Requiescat))
                         {
                             if ((Config.PLD_ST_RequiescatWeave == 0 && CanWeave(actionID) ||
                                 (Config.PLD_ST_RequiescatWeave == 1 && CanDelayedWeave(actionID, 2.0, 0.6)))) // These weave timings make no sense but they work for some reason
@@ -578,7 +579,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                     // Requiescat inside burst (checking for FoF buff causes a late weave and can misalign over long fights with some ping)
                     if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Requiescat) &&
-                        WasLastAbility(FightOrFlight) && ActionReady(Requiescat))
+                        (WasLastAbility(FightOrFlight) || JustUsed(FightOrFlight,6f)) && ActionReady(Requiescat))
                     {
                         if ((Config.PLD_AoE_RequiescatWeave == 0 && CanWeave(actionID) ||
                             (Config.PLD_AoE_RequiescatWeave == 1 && CanDelayedWeave(actionID, 2.0, 0.6))))
