@@ -33,6 +33,11 @@ namespace XIVSlothCombo.Combos.PvE
             InnerChaos = 16465,
             Orogeny = 25752,
             PrimalRend = 25753,
+            ThrillOfBattle = 40,
+            Vengeance = 44,
+            ShakeItOff = 7388,
+            Equilibrium = 3552,
+            Rampart = 7531,
             Onslaught = 7386;
 
         public static class Buffs
@@ -42,6 +47,9 @@ namespace XIVSlothCombo.Combos.PvE
                 SurgingTempest = 2677,
                 NascentChaos = 1897,
                 PrimalRendReady = 2624,
+                ThrillOfBattle = 87,
+                RawIntuition = 735,
+                Vengeance = 89,
                 Berserk = 86;
         }
 
@@ -62,6 +70,37 @@ namespace XIVSlothCombo.Combos.PvE
                 WAR_DecimateGauge = "WAR_DecimateGauge",
                 WAR_InfuriateSTGauge = "WAR_InfuriateSTGauge",
                 WAR_InfuriateAoEGauge = "WAR_InfuriateAoEGauge";
+        }
+
+        internal class WAR_SimpleMit : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_SimpleMit;
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                if (actionID is RawIntuition)
+                {
+                        if (ActionReady(ThrillOfBattle) && level >= 30)
+                            return ThrillOfBattle;
+
+                        else if ((IsOnCooldown(ThrillOfBattle) || level < 30) && (GetCooldownRemainingTime(RawIntuition) < 1 || ActionReady(RawIntuition)))
+                            return RawIntuition;
+
+                        else if ((IsOnCooldown(RawIntuition) || level < 56) && (ActionReady(Rampart) || (GetCooldownRemainingTime(Rampart) < 1)))
+                            return Rampart;
+
+                        else if (IsOnCooldown(Rampart) && (ActionReady(Equilibrium) || (GetCooldownRemainingTime(Equilibrium) < 1)))
+                            return Equilibrium;
+
+                        else if (((IsOnCooldown(Equilibrium) || level < 58)) && (GetCooldownRemainingTime(Vengeance) < 1 || ActionReady(Vengeance)))
+                            return Vengeance;
+
+                        else if (HasEffect(Buffs.Vengeance) && HasEffect(Buffs.RawIntuition) && HasEffect(Buffs.ThrillOfBattle) && level > 67 && 
+                        (GetCooldownRemainingTime(ShakeItOff) < 1 || ActionReady(ShakeItOff)))
+                            return ShakeItOff;
+                }
+                        return actionID;
+            }
+
         }
 
         // Replace Storm's Path with Storm's Path combo and overcap feature on main combo to fellcleave

@@ -3561,6 +3561,10 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Steel Cyclone / Decimate Option", "Adds Steel Cyclone / Decimate to Advanced Mode.", WAR.JobID)]
         WAR_AoE_Overpower_Decimate = 18028,
 
+        [ReplaceSkill(WAR.RawIntuition)]
+        [CustomComboInfo("Simple Mitigation for WAR", "Simple Mit. Replaces Raw Intuition.", WAR.JobID, -1)]
+        WAR_SimpleMit = 18029,
+
         // Last value = 18028
 
         #endregion
